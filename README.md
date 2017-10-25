@@ -225,16 +225,14 @@ Screens should go to the directory specified in the parameter `screensDir` speci
 The library generates some log messages on the file p3270.log. You can adjust th elog level by modifying it directly on the library.
 
 
-## Contributing 
-
+## Contributing 
 - Fork the project and create a new branch.
 - Do some work. 
 - Commit and push. 
 - Open a Pull Request.
 
 
-## License
-
+## License 
 GPLv3. See the [LICENSE](LICENSE.txt) file.
 
 
