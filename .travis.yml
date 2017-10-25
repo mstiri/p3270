@@ -9,5 +9,5 @@ python:
 install:
   - export PYTHONPATH=$PWD/p3270
 script:
-  - cd test
+  - cd p3270/test
   - python test_p3270.py
