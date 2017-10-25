@@ -20,7 +20,7 @@ Import the client client class from the library:
 from p3270 import P3270Client
 ```
 
-Create a client object:
+Create a client object specifying a configuration file:
 ```python 
 my_client = P3270Client(configFile='my-config.cfg')
 ```
@@ -218,16 +218,23 @@ my_client.disconnect()
 
 # End the emulation session
 my_client.endSession()
-
 ```
+
+
+Screens should go to the directory specified in the parameter `screensDir` specified in the configuration file.
+The library generates some log messages on the file p3270.log. You can adjust th elog level by modifying it directly on the library.
+
 
 ## Contributing 
 
-- Fork the project and create a new branch
-- Do some work 
-- Commit and push 
-- Open a Pull Request
+- Fork the project and create a new branch.
+- Do some work. 
+- Commit and push. 
+- Open a Pull Request.
+
 
 ## License
 
-GPLv3. See the [LICENSE](LICENSE.txt) file
+GPLv3. See the [LICENSE](LICENSE.txt) file.
+
+
