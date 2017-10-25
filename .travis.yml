@@ -1,0 +1,14 @@
+language: python
+branches:
+  only:
+    - master
+python:
+  - 3.4
+  - 3.5
+  - 3.6
+install:
+  - export PYTHONPATH=$PWD/p3270
+script:
+	- cd test
+  - python test_p3270.py
+	
