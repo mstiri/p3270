@@ -1,0 +1,2 @@
+include LICENSE.txt
+recursive-include p3270 p3270.cfg

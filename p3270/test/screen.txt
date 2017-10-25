@@ -1,0 +1,24 @@
+ Date:  14/10/17
+ Time : 21:54:33                                           Terminal : ABCD0001
+
+
+
+
+
+
+
+             /\------[ You are connected to the host ]------/\
+             ||_____________________________________________||
+
+
+
+
+
+
+
+
+
+
+
+ PF1: Help                                                    PF3: Quit
+ User ID =>           Password =>
