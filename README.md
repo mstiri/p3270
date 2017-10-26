@@ -2,7 +2,7 @@
 
 [![Travis Build Status](https://travis-ci.org/mstiri/p3270.svg?branch=master)](https://travis-ci.org/mstiri/p3270)
 ## Description
-A Python library to acces IBM hosts. The library provides an interface to communicate with IBM hosts: send commands and text, receive output (screens). The library provides the means to do what a human can do using a 3270 emulator. 
+ Python library that provides an interface to communicate with IBM hosts: send commands and text, receive output (screens). The library provides the means to do what a human can do using a 3270 emulator. 
 
 The library is highly customizable and is built with simplicity in mind. 
 It is written in Python 3, runs on Linux and Unix-like Operating Systems, and relies on the `s3270` utility. So it is required to have the `s3270` installed on your system and available on your PATH.
