@@ -9,8 +9,11 @@ python:
   - 3.5-dev
   - 3.6-dev
   - 3.7-dev
-install:
+install: 
+  - pip install coverage coveralls 
   - export PYTHONPATH=$PWD/p3270
 script:
   - cd p3270/test
-  - python test_p3270.py
+  - coverage run test_p3270.py
+after_success:
+  - coveralls
