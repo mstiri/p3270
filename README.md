@@ -96,8 +96,10 @@ codePage = cp037
 screensDir = /home/me/projects/python/mainframe/screens/
 ```
 
+One configuration file can be shared by multiple clients. 
 
-### Library methods: 
+
+### Library methods:
 
 Once the client object (P3270Client class) is created, the following methods can be used to interact with the host.
 * `connect()`:
