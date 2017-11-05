@@ -28,9 +28,10 @@ The library allows you to open a telnet connection to an IBM host, and execute a
 A simple pip command brings the library to your environment: 
 
 ```pip install p3270```
+__NB__: Make sure that you're using the python3 version of the pip command. 
 
 ## Usage 
-Import the client client class from the library:
+Import the client class from the library:
 ```python 
 from p3270 import P3270Client
 ```
