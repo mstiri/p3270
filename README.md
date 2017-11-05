@@ -6,7 +6,7 @@
             src="https://travis-ci.org/mstiri/p3270.svg?branch=master"
             alt="build status">
     </a>
-    <a>
+    <a href='https://coveralls.io/github/mstiri/p3270?branch=master'>
         <img 
             src="https://coveralls.io/repos/github/mstiri/p3270/badge.svg?branch=master"
             alt="coverage">
