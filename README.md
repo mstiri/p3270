@@ -74,6 +74,7 @@ Default is `3279-2`.
 
 - __traceFile__: The file to which communication traces will be directed. If not set traces will not be generated.
 - __LUName__: LU name to use for connection to the host. If it is not set, connection is done with no LU name. 
+- __verifyCert__: Verify or not the certificate of the remote host (yes or no). Default is yes.
 - __codePage__: The EBCDIC character set to use for communication with the host. 
 Supported code pages depens on your `s3270` version. The list can be obtained by running the following command on your shell:
 ```sh 
