@@ -20,6 +20,7 @@ class TestP3270Client(unittest.TestCase):
         self.popenPatcher = patch('subprocess.Popen')
         self.popenMock = self.popenPatcher.start()
         self.client1 = P3270Client(configFile="p3270_ok.cfg")
+        self.client3 = P3270Client(configFile="p3270_tls_ok.cfg")
         with open('screen.data', 'r') as fData:
             self.screenData = fData.read().encode()
         with open('screen.txt', 'r') as fText:
@@ -51,6 +52,12 @@ class TestP3270Client(unittest.TestCase):
         assert self.client1.connect()
         self.checkStdin(cmd)
         
+    def test_tls_connect_ok(self):
+        cmd_tls = b'Connect(L:LU01QSWJ@localhost)\n'
+        self.resetMock()
+        assert self.client3.connect()
+        self.checkStdin(cmd_tls)
+
     def test_connect_ko(self):    
         # Unsuccessful connection request 
         self.popenMock.reset_mock()

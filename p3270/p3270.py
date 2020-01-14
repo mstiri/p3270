@@ -83,12 +83,14 @@ class P3270Client():
         configuration file is specified. Default values will be used.
     """
     numOfInstances = 0
-    def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None):
+    def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None, verifyCert='yes', enableTLS='no'):
         self.luName = luName
         self.hostName = hostName
         self.hostPort = hostPort
         self.modelName = modelName
         self.configFile = configFile
+        self.verifyCert = verifyCert
+        self.enableTLS = enableTLS
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
                            hostPort=self.hostPort, luName = self.luName, modelName=self.modelName)
         if self.conf.isValid():
@@ -113,15 +115,21 @@ class P3270Client():
                 self.args.append('-trace')
                 self.args.append('-tracefile')
                 self.args.append(self.conf.traceFile)
+            if self.conf.verifyCert == "no":
+                self.args.append('-noverifycert')
 
     def connect(self):
         """ Connect to the host
         """
         if self.conf.luName:
             logger.info("Connect to host [{}] with LUName: [{}]".format(self.conf.hostName, self.conf.luName))
+            if self.conf.enableTLS == 'yes':
+                return self.s3270.do('Connect(L:{}@{})'.format(self.conf.luName,self.conf.hostName))
             return self.s3270.do('Connect(B:{}@{})'.format(self.conf.luName,self.conf.hostName))
         else:
             logger.info("Connect to host [{}] with no LUName".format(self.conf.hostName))
+            if self.conf.enableTLS == 'yes':
+                return self.s3270.do('Connect(L:{})'.format(self.conf.hostName))
             return self.s3270.do('Connect(B:{})'.format(self.conf.hostName))
 
     def disconnect(self):
@@ -359,10 +367,12 @@ class Config():
     luPattern = re.compile("^ *LUName *=")
     cpPattern = re.compile("^ *codePage *=")
     screensPattern = re.compile("^ *screensDir *=")
+    verifyCertPattern = re.compile("^ *verifyCert *=")
+    enableTLSPattern = re.compile("^ *enableTLS *=")
 
     def __init__(self, cfgFile=None, hostName='localhost', hostPort='23',
                  modelName='3279-2', traceFile=None, 
-                 luName=None, codePage='cp037', screensDir=None):
+                 luName=None, codePage='cp037', screensDir=None, verifyCert='yes', enableTLS='no'):
         self.cfgFile = cfgFile
         self.hostName = hostName
         self.hostPort = hostPort
@@ -371,6 +381,8 @@ class Config():
         self.luName = luName
         self.codePage = codePage
         self.screensDir = screensDir
+        self.verifyCert = verifyCert
+        self.enableTLS = enableTLS
         # List of invalid attributes
         self.invalidAttributes = []
         if self.cfgFile:
@@ -387,6 +399,10 @@ class Config():
                     logger.error("The specified code page ({}) is not valid".format(self.codePage))
                 elif attr == 'screensDir':
                     logger.error("The directory ({}) does not exist".format(self.screensDir))
+                elif attr == 'verifyCert':
+                    logger.error("The value of the verifyCert parameter in the config file should be: yes or no")
+                elif attr == 'enableTLS':
+                    logger.error("The value of the enableTLS parameter in the config file should be: yes or no")
         else:
             self._isValid = True
 
@@ -408,6 +424,10 @@ class Config():
                     self.codePage = line.split('=')[1].strip()
                 elif self.screensPattern.match(line):
                     self.screensDir = line.split('=')[1].strip()
+                elif self.verifyCertPattern.match(line):
+                    self.verifyCert = line.split('=')[1].strip().lower()
+                elif self.enableTLSPattern.match(line):
+                    self.enableTLS = line.split('=')[1].strip().lower()
 
     def validateAttributes(self):
         """ Validate configuration attributes:
@@ -415,6 +435,8 @@ class Config():
             Port: should be in the range 1..65535
             codePage: The specified code page should be valid
             screensDir: The directory should exist if specified
+            verifyCert: The value should be "yes" or "no"
+            enableTLS: The value should be "yes" or "no"
         """
         if self.modelName not in self._validModels:
             self.invalidAttributes.append('modelName')
@@ -426,6 +448,12 @@ class Config():
         if self.screensDir:
             if not os.path.isdir(self.screensDir):
                 self.invalidAttributes.append('screensDir')
+        if self.verifyCert:
+            if self.verifyCert not in ["yes", "no"]:
+                self.invalidAttributes.append('verifyCert')
+        if self.enableTLS:
+            if self.enableTLS not in ["yes", "no"]:
+                self.invalidAttributes.append('enableTLS')
 
     def isValid(self):
         return self._isValid
