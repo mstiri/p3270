@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
         name = 'p3270',
         packages = ['p3270'],
-        version = '0.1.1',
+        version = '0.1.2',
         description = 'Python library to communicate with IBM hosts',
         author = 'Mossaab Stiri',
         author_email = 'mossaab.stiri@gmail.com',
