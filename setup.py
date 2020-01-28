@@ -1,6 +1,7 @@
-from distutils.core import setup
+#from distutils.core import setup
+import setuptools
 
-setup(
+setuptools.setup(
         name = 'p3270',
         packages = ['p3270'],
         version = '0.1.2',
