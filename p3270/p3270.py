@@ -49,26 +49,26 @@ class S3270():
         """
         if doNotCheck:
             return True
-        data = self.subpro.stdout.readline().decode().rstrip('\n')
+        data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
         if not data.startswith('data:'):
             statusMsg = data
         else:
             self.buffer = data[6:]
-            data = self.subpro.stdout.readline().decode().rstrip('\n')
+            data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
             if not data.startswith('data:'):
                 statusMsg = data
             else:
                 self.buffer += '\n' + data[6:]
                 go = True
                 while go:
-                    data = self.subpro.stdout.readline().decode().rstrip('\n')
+                    data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
                     if not data.startswith('data:'):
                         go = False
                         statusMsg = data
                     else:
                         self.buffer += '\n' + data[6:]
 
-        returnMsg = self.subpro.stdout.readline().decode().rstrip('\n')
+        returnMsg = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
         self.statusMsg = StatusMessage(statusMsg)
         logger.debug("Buffer data    => [{}]".format(self.buffer))
         logger.debug("Status message => [{}]".format(statusMsg))
@@ -111,6 +111,9 @@ class P3270Client():
             self.args.append(self.conf.modelName)
             self.args.append('-port')
             self.args.append(self.conf.hostPort)
+            if self.conf.codePage:
+                self.args.append('-charset')
+                self.args.append(self.conf.codePage)
             if self.conf.traceFile:
                 self.args.append('-trace')
                 self.args.append('-tracefile')
@@ -306,6 +309,16 @@ class P3270Client():
         """
         self.s3270.do('NoOpCommand')
         return self.s3270.statusMsg.connectionState()
+
+    def readTextAtPosition(self, row, col, length):
+        """ Reads text at a row,col position and returns it
+        """
+        # The origin is [0,0] not [1,1]
+        row -= 1
+        col -= 1
+        logger.info("Reading at position ({},{})".format(row, col))
+        self.s3270.do("Ascii({0},{1},{2})".format(row,col,length))
+        return self.s3270.buffer
 
 class Config():
     """ Config represents a communication configuration.
