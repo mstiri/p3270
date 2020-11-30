@@ -10,16 +10,20 @@ fileHandler = logging.FileHandler('p3270.log')
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
 
+
 class InvalidConfiguration(Exception):
     pass
+
 
 class S3270():
     """ S3270: represents the S3270 command and its arguments/methods
         This the interface to the 's3270' executable
     """
     numOfInstances = 0
-    def __init__(self, args):
+
+    def __init__(self, args, encoding='latin1'):
         self.args = args
+        self.encoding = encoding
         logger.debug('Calling s3270 with the following args: ', self.args)
         self.subpro = subprocess.Popen(self.args,
                                        stdout=subprocess.PIPE,
@@ -31,7 +35,7 @@ class S3270():
     def do(self, cmd):
         """ Execute the command represented by the specified string
         """
-        self.cmd = cmd.encode() + b'\n'
+        self.cmd = cmd.encode(self.encoding) + b'\n'
         logger.debug("Sending the Command: [{}]".format(self.cmd))
         self.subpro.stdin.write(self.cmd)
         self.subpro.stdin.flush()
@@ -49,26 +53,26 @@ class S3270():
         """
         if doNotCheck:
             return True
-        data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
+        data = self.subpro.stdout.readline().decode(self.encoding).rstrip('\n').rstrip('\r')
         if not data.startswith('data:'):
             statusMsg = data
         else:
             self.buffer = data[6:]
-            data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
+            data = self.subpro.stdout.readline().decode(self.encoding).rstrip('\n').rstrip('\r')
             if not data.startswith('data:'):
                 statusMsg = data
             else:
                 self.buffer += '\n' + data[6:]
                 go = True
                 while go:
-                    data = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
+                    data = self.subpro.stdout.readline().decode(self.encoding).rstrip('\n').rstrip('\r')
                     if not data.startswith('data:'):
                         go = False
                         statusMsg = data
                     else:
                         self.buffer += '\n' + data[6:]
 
-        returnMsg = self.subpro.stdout.readline().decode('latin1').rstrip('\n').rstrip('\r')
+        returnMsg = self.subpro.stdout.readline().decode(self.encoding).rstrip('\n').rstrip('\r')
         self.statusMsg = StatusMessage(statusMsg)
         logger.debug("Buffer data    => [{}]".format(self.buffer))
         logger.debug("Status message => [{}]".format(statusMsg))
@@ -77,13 +81,16 @@ class S3270():
             return True
         return False
 
+
 class P3270Client():
     """ P3270Client: Represents the model of a 3270 client.
         It may rely on a configuration file for further customization. If no
         configuration file is specified. Default values will be used.
     """
     numOfInstances = 0
-    def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None, verifyCert='yes', enableTLS='no'):
+
+    def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None,
+                 verifyCert='yes', enableTLS='no'):
         self.luName = luName
         self.hostName = hostName
         self.hostPort = hostPort
@@ -92,11 +99,11 @@ class P3270Client():
         self.verifyCert = verifyCert
         self.enableTLS = enableTLS
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
-                           hostPort=self.hostPort, luName = self.luName, modelName=self.modelName)
+                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName)
         if self.conf.isValid():
             self.subpro = None
             self.makeArgs()
-            self.s3270 = S3270(self.args)
+            self.s3270 = S3270(self.args, self.conf.encoding)
         else:
             raise InvalidConfiguration
         self._isValid = self.conf.isValid()
@@ -127,8 +134,8 @@ class P3270Client():
         if self.conf.luName:
             logger.info("Connect to host [{}] with LUName: [{}]".format(self.conf.hostName, self.conf.luName))
             if self.conf.enableTLS == 'yes':
-                return self.s3270.do('Connect(L:{}@{})'.format(self.conf.luName,self.conf.hostName))
-            return self.s3270.do('Connect(B:{}@{})'.format(self.conf.luName,self.conf.hostName))
+                return self.s3270.do('Connect(L:{}@{})'.format(self.conf.luName, self.conf.hostName))
+            return self.s3270.do('Connect(B:{}@{})'.format(self.conf.luName, self.conf.hostName))
         else:
             logger.info("Connect to host [{}] with no LUName".format(self.conf.hostName))
             if self.conf.enableTLS == 'yes':
@@ -317,8 +324,9 @@ class P3270Client():
         row -= 1
         col -= 1
         logger.info("Reading at position ({},{})".format(row, col))
-        self.s3270.do("Ascii({0},{1},{2})".format(row,col,length))
+        self.s3270.do("Ascii({0},{1},{2})".format(row, col, length))
         return self.s3270.buffer
+
 
 class Config():
     """ Config represents a communication configuration.
@@ -329,6 +337,43 @@ class Config():
                 hostPort=23
                 modelName="3279-2"
     """
+    _encodingLookup = {'cp037': 'latin1',
+                       'cp273': 'latin1',
+                       'cp275': 'latin1',
+                       'cp277': 'latin1',
+                       'cp278': 'latin1',
+                       'cp280': 'latin1',
+                       'cp284': 'latin1',
+                       'cp285': 'latin1',
+                       'cp297': 'latin1',
+                       'cp424': 'latin8',  # 'hebrew',
+                       'cp500': 'latin1',
+                       'cp870': 'latin2',  # 'polish, slovenian',
+                       'cp871': 'latin1',
+                       'cp875': 'latin7',  # 'greek',
+                       'cp880': 'koi8-r',  # 'russian',
+                       # 'cp930': 'cp290, japanese-290, japanese-kana',
+                       # 'cp935': 'cp836, simplified-chinese',
+                       # 'cp937': 'traditional-chinese',
+                       # 'cp939': 'cp1027, japanese-1027, japanese-latin',
+                       'cp1026': 'latin5',  # 'turkish',
+                       'cp1047': 'latin1',
+                       'cp1140': 'latin9',
+                       'cp1141': 'latin9',
+                       'cp1142': 'latin9',
+                       'cp1143': 'latin9',
+                       'cp1144': 'latin9',
+                       'cp1145': 'latin9',
+                       'cp1146': 'latin9',
+                       'cp1147': 'latin9',
+                       'cp1148': 'latin9',
+                       # 'cp1149': 'latin9',
+                       # 'cp1160': 'thai',
+                       # 'cp1388': 'chinese-gb18030',
+                       # 'apl': '',
+                       # 'bracket': 'oldibm, bracket437'
+                       }
+
     _validModels = ['3278-2', '3278-3', '3278-4', '3278-5',
                     '3279-2', '3279-3', '3279-4', '3279-5']
     _sbcsCodePages = {'cp037': '(cp37, us, us-intl)',
@@ -384,7 +429,7 @@ class Config():
     enableTLSPattern = re.compile("^ *enableTLS *=")
 
     def __init__(self, cfgFile=None, hostName='localhost', hostPort='23',
-                 modelName='3279-2', traceFile=None, 
+                 modelName='3279-2', traceFile=None,
                  luName=None, codePage='cp037', screensDir=None, verifyCert='yes', enableTLS='no'):
         self.cfgFile = cfgFile
         self.hostName = hostName
@@ -458,6 +503,8 @@ class Config():
         if self.codePage:
             if self.codePage not in self._dbcsCodePage and self.codePage not in self._sbcsCodePages:
                 self.invalidAttributes.append('codePage')
+            else:
+                self.encoding = self._encodingLookup.get(self.codePage, 'latin1')
         if self.screensDir:
             if not os.path.isdir(self.screensDir):
                 self.invalidAttributes.append('screensDir')
@@ -480,6 +527,7 @@ class Config():
             print("Terminal Model : {}".format(self.modelName))
         if self.traceFile:
             print("Trace File     : {}".format(self.traceFile))
+
 
 class StatusMessage():
 
