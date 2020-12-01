@@ -90,7 +90,7 @@ class P3270Client():
     numOfInstances = 0
 
     def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None,
-                 verifyCert='yes', enableTLS='no'):
+                 verifyCert='yes', enableTLS='no', codePage='cp037'):
         self.luName = luName
         self.hostName = hostName
         self.hostPort = hostPort
@@ -99,7 +99,7 @@ class P3270Client():
         self.verifyCert = verifyCert
         self.enableTLS = enableTLS
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
-                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName)
+                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)
         if self.conf.isValid():
             self.subpro = None
             self.makeArgs()
