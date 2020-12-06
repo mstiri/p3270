@@ -90,7 +90,7 @@ class P3270Client():
     numOfInstances = 0
 
     def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None,
-                 verifyCert='yes', enableTLS='no', codePage='cp037'):
+                 verifyCert='yes', enableTLS='no', codePage='cp037', path=None, timeoutInSec=20):
         self.luName = luName
         self.hostName = hostName
         self.hostPort = hostPort
@@ -98,6 +98,8 @@ class P3270Client():
         self.configFile = configFile
         self.verifyCert = verifyCert
         self.enableTLS = enableTLS
+        self.timeout = timeoutInSec
+        self.path = path
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
                            hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)
         if self.conf.isValid():
@@ -113,6 +115,9 @@ class P3270Client():
         """ Construct the list of arguments to be used for interacting with s3270
         """
         self.args = ['s3270']
+        if self.path is not None:
+            self.args = [self.path + 's3270']
+
         if self.conf.isValid():
             self.args.append('-model')
             self.args.append(self.conf.modelName)
@@ -327,6 +332,18 @@ class P3270Client():
         self.s3270.do("Ascii({0},{1},{2})".format(row, col, length))
         return self.s3270.buffer
 
+    def clearField(self):
+        self.s3270.do("DeleteField")
+
+    def trySendTextToField(self, text, row, col) -> bool:
+        self.moveTo(row, col)
+        self.clearField()
+        self.sendText(text)
+        result = self.readTextAtPosition(row,col,len(text))
+        return text == result
+
+    def waitForField(self):
+        result = self.s3270.do("Wait({0}, InputField)".format(self.timeout))
 
 class Config():
     """ Config represents a communication configuration.
