@@ -188,8 +188,41 @@ Once the client object (P3270Client class) is created, the following methods can
 * `isConnected()` 
     * __Description__: Get the connection status of the client 
     * __Arguments__: none
+* `readTextAtPosition(row, col, length)` 
+    * __Description__: Reads text at a row,col position and returns it 
+    * __Arguments__: <br>
+        __row__ (_int_): Row position on where to read.<br>
+        __col__ (_int_): Column position on where to read.<br>
+        __length__ (_int_): How many chars to read
+* `readTextArea(row, col, rows, cols)` 
+    * __Description__: Reads text area at a row,col position and returns it 
+    * __Arguments__: <br>
+        __row__ (_int_): Row position on where to read.<br>
+        __col__ (_int_): Column position on where to read.<br>
+        __rows__ (_int_): Number of rows to read down from the starting row.<br>
+        __cols__ (_int_): Number of columns to read, right from the starting column.<br>
+* `readTextAtPosition(row, col, expected_text)` 
+    * __Description__: Will check at the given coordinates if the text appear or not. Returns true if the text was found, false if not. 
+    * __Arguments__: <br>
+        __row__ (_int_): Row position on where to read.<br>
+        __col__ (_int_): Column position on where to read.<br>
+        __expected_text__ (_string_): The text to look for
+* `clearField()` 
+    * __Description__: Will clear the field where the cursor is standing 
+    * __Arguments__: none
+* `waitForField()` 
+    * __Description__: Will wait for the field to be ready where the cursor is standing 
+    * __Arguments__: none
+* `trySendTextToField(text, row, col)` 
+    * __Description__: Will try and write the given text at the given position. Once the text is written, it will check if the text is now shown at the screen at that position. Returns true if succeeded, false if not. 
+    * __Arguments__: <br>
+        __row__ (_int_): Row position on where to read.<br>
+        __col__ (_int_): Column position on where to read.<br>
+        __text__ (_string_): Text to write
 
-All of the above methods return `True` if they succeed, and `False` otherwise. The only exception is `endSession()`, it terminates the emulation session and returns `True` in all cases.
+All of the above methods return `True` if they succeed, and `False` otherwise. The only exceptions:
+- `endSession()`, it terminates the emulation session and returns `True` in all cases.
+- `readTextAtPosition`, `readTextArea`, `getScreen` all return the text they read.
 
 
 
