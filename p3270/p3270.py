@@ -332,6 +332,28 @@ class P3270Client():
         self.s3270.do("Ascii({0},{1},{2})".format(row, col, length))
         return self.s3270.buffer
 
+    def readTextArea(self, row, col, rows, cols):
+        """ Reads a textarea at a row,col position going down a number of rows and reading a number of cols
+        """
+        # The origin is [0,0] not [1,1]
+
+        if row < 1 or col < 1 or rows < 1 or cols < 1:
+            raise Exception("ArgumentException: row,col,rows,col must all be 1 or above")
+        
+        row -= 1
+        col -= 1
+        logger.info("Reading area at ({},{}) with rows: {} and cols: {}".format(row, col, rows, cols))
+        self.s3270.do("Ascii({0},{1},{2},{3})".format(row, col, rows, cols))
+        result = self.s3270.buffer
+        if rows > 1:
+            return result.splitlines()
+
+        return result
+
+    def foundTextAtPosition(self, row, col, sent_text):
+        read_text = self.readTextAtPosition(row, col, len(sent_text))
+        return read_text == sent_text
+
     def clearField(self):
         self.s3270.do("DeleteField")
 
