@@ -43,6 +43,13 @@ Create a client object specifying a configuration file:
 my_client = P3270Client(configFile='my-config.cfg')
 ```
 
+It is also possible to create a client object with the config options stated in the code.
+```python 
+my_client = P3270Client(hostName='192.168.100.25', path='c:\\wc3270\\', codePage='cp277')
+```
+
+If the s3270 program is downloaded as a .zip file or otherwise fails to be added to the path when installed, it is possible to state the path when creating the P3270Client.
+
 Connect the client, and you're good to go:
 ```python
 if not my_client.connect():
