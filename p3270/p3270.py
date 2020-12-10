@@ -354,12 +354,10 @@ class P3270Client():
         read_text = self.readTextAtPosition(row, col, len(sent_text))
         return read_text == sent_text
 
-    def clearField(self):
-        self.s3270.do("DeleteField")
 
     def trySendTextToField(self, text, row, col) -> bool:
         self.moveTo(row, col)
-        self.clearField()
+        self.delField()
         self.sendText(text)
         result = self.readTextAtPosition(row,col,len(text))
         return text == result

@@ -214,9 +214,6 @@ Once the client object (P3270Client class) is created, the following methods can
         __row__ (_int_): Row position on where to read.<br>
         __col__ (_int_): Column position on where to read.<br>
         __expected_text__ (_string_): The text to look for
-* `clearField()` 
-    * __Description__: Will clear the field where the cursor is standing 
-    * __Arguments__: none
 * `waitForField()` 
     * __Description__: Will wait for the field to be ready where the cursor is standing 
     * __Arguments__: none
