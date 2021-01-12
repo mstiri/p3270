@@ -4,7 +4,7 @@ import setuptools
 setuptools.setup(
         name = 'p3270',
         packages = ['p3270'],
-        version = '0.1.2',
+        version = '0.1.3',
         description = 'Python library to communicate with IBM hosts',
         author = 'Mossaab Stiri',
         author_email = 'mossaab.stiri@gmail.com',
