@@ -101,7 +101,7 @@ class P3270Client():
         self.timeout = timeoutInSec
         self.path = path
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
-                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)
+                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage, enableTLS = self.enableTLS)
         if self.conf.isValid():
             self.subpro = None
             self.makeArgs()
