@@ -235,18 +235,18 @@ class TestP3270Client(unittest.TestCase):
     def test_statusMessage(self):
         self.resetMock()
         self.client1.sendEnter()
-        statusMessage = self.client1.s3270.statusMsg
-        assert statusMessage.isValid()
-        assert statusMessage.keyboardState() == 'Unlocked'
-        assert statusMessage.screenFormatting() == 'Formatted'
-        assert statusMessage.fieldProtection() == 'Unprotected'
-        assert statusMessage.connectionState()
-        assert statusMessage.emulatorMode() == '3270'
-        assert statusMessage.modelNumber() == '2'
-        assert statusMessage.screenDefinition() == (24, 80)
-        assert statusMessage.cursorPosition() == (9, 3)
-        assert statusMessage.windowId() == '0x0'
-        assert statusMessage.execTime() == '0.000'
+        status_message = self.client1.s3270.statusMsg
+        assert status_message.isValid()
+        assert status_message.keyboardState() == 'Unlocked'
+        assert status_message.screenFormatting() == 'Formatted'
+        assert status_message.fieldProtection() == 'Unprotected'
+        assert status_message.connectionState()
+        assert status_message.emulatorMode() == '3270'
+        assert status_message.modelNumber() == '2'
+        assert status_message.screenDefinition() == (24, 80)
+        assert status_message.cursorPosition() == (9, 3)
+        assert status_message.windowId() == '0x0'
+        assert status_message.execTime() == '0.000'
 
     def test_printScreen(self):
         cmd = b'PrintText(string)\n'
@@ -261,18 +261,18 @@ class TestP3270Client(unittest.TestCase):
         self.popenMock.reset_mock()
         self.popenMock.return_value.stdout = self.invalidResponse
         self.client1.isConnected()
-        statusMessage = self.client1.s3270.statusMsg
-        assert not statusMessage.isValid()
-        assert statusMessage.keyboardState() == None
-        assert statusMessage.screenFormatting() == None
-        assert statusMessage.fieldProtection() == None
-        assert statusMessage.connectionState() == None
-        assert statusMessage.emulatorMode() == None
-        assert statusMessage.modelNumber() == None
-        assert statusMessage.screenDefinition() == None
-        assert statusMessage.cursorPosition() == None
-        assert statusMessage.windowId() == None
-        assert statusMessage.execTime() == None
+        status_message = self.client1.s3270.statusMsg
+        assert not status_message.isValid()
+        assert status_message.keyboardState() == None
+        assert status_message.screenFormatting() == None
+        assert status_message.fieldProtection() == None
+        assert status_message.connectionState() == None
+        assert status_message.emulatorMode() == None
+        assert status_message.modelNumber() == None
+        assert status_message.screenDefinition() == None
+        assert status_message.cursorPosition() == None
+        assert status_message.windowId() == None
+        assert status_message.execTime() == None
 
 
 if __name__ == '__main__':
