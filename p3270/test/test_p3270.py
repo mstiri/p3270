@@ -201,6 +201,18 @@ class TestP3270Client(unittest.TestCase):
         assert self.client1.sendText('CEMT I TASK')
         self.checkStdin(cmd)
 
+    def test_sendTextAsterisksTrue(self):
+        cmd = b'String("CEMT I TASK")\n'
+        self.resetMock()
+        assert self.client1.sendText('CEMT I TASK', asterisks=True)
+        self.checkStdin(cmd)
+
+    def test_sendTextAsterisksFalse(self):
+        cmd = b'String("CEMT I TASK")\n'
+        self.resetMock()
+        assert self.client1.sendText('CEMT I TASK', asterisks=False)
+        self.checkStdin(cmd)
+
     def test_saveScreenHTML(self):
         screens_dir = self.client1.conf.screensDir
         cmd = b'PrintText(html, {}/myscreen.html)\n'.decode().format(screens_dir).encode()
