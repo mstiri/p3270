@@ -263,16 +263,16 @@ class TestP3270Client(unittest.TestCase):
         self.client1.isConnected()
         status_message = self.client1.s3270.statusMsg
         assert not status_message.isValid()
-        assert status_message.keyboardState() == None
-        assert status_message.screenFormatting() == None
-        assert status_message.fieldProtection() == None
-        assert status_message.connectionState() == None
-        assert status_message.emulatorMode() == None
-        assert status_message.modelNumber() == None
-        assert status_message.screenDefinition() == None
-        assert status_message.cursorPosition() == None
-        assert status_message.windowId() == None
-        assert status_message.execTime() == None
+        assert status_message.keyboardState() is None
+        assert status_message.screenFormatting() is None
+        assert status_message.fieldProtection() is None
+        assert status_message.connectionState() is None
+        assert status_message.emulatorMode() is None
+        assert status_message.modelNumber() is None
+        assert status_message.screenDefinition() is None
+        assert status_message.cursorPosition() is None
+        assert status_message.windowId() is None
+        assert status_message.execTime() is None
 
 
 if __name__ == '__main__':
