@@ -4,19 +4,20 @@ import unittest
 from unittest.mock import Mock, patch
 from p3270 import P3270Client, S3270, InvalidConfiguration
 
+
 class TestP3270Client(unittest.TestCase):
 
     def setUp(self):
         self.invalidConnectResponse = BytesIO(b'data: Connect to localhost, port 58001: Connection refused\n'
-                                   + b'L U U N N 2 24 80 0 0 0x0 -\n'
-                                   + b'error')
+                                              + b'L U U N N 2 24 80 0 0 0x0 -\n'
+                                              + b'error')
         self.validResponse = BytesIO(b'U F U C(localhost) I 2 24 80 8 2 0x0 0.000\n'
-                                 + b'ok')
+                                     + b'ok')
         self.invalidResponse = BytesIO(b'\n'
-                                 + b'')
+                                       + b'')
         self.disconnectedResponse = BytesIO(b'data: Unknown action: NoOpCommand\n'
-                                             + b'L U U N N 2 24 80 0 0 0x0 -\n'
-                                             + b'error')
+                                            + b'L U U N N 2 24 80 0 0 0x0 -\n'
+                                            + b'error')
         self.popenPatcher = patch('subprocess.Popen')
         self.popenMock = self.popenPatcher.start()
         self.client1 = P3270Client(configFile="p3270_ok.cfg")
@@ -27,13 +28,13 @@ class TestP3270Client(unittest.TestCase):
             self.screenText = '*' * 80 + '\n'
             self.screenText += fText.read()
             self.screenText += '*' * 80 + '\n'
-        self.validResponseWithData = BytesIO(self.screenData 
+        self.validResponseWithData = BytesIO(self.screenData
                                              + b'U F U C(localhost) I 2 24 80 8 2 0x0 0.000\n'
                                              + b'ok')
-        
+
     def tearDown(self):
         self.popenPatcher.stop()
-    
+
     def checkStdin(self, cmd):
         self.popenMock.return_value.stdin.write.assert_called_once_with(cmd)
 
@@ -51,14 +52,14 @@ class TestP3270Client(unittest.TestCase):
         self.resetMock()
         assert self.client1.connect()
         self.checkStdin(cmd)
-        
+
     def test_tls_connect_ok(self):
         cmd_tls = b'Connect(L:LU01QSWJ@localhost)\n'
         self.resetMock()
         assert self.client3.connect()
         self.checkStdin(cmd_tls)
 
-    def test_connect_ko(self):    
+    def test_connect_ko(self):
         # Unsuccessful connection request 
         self.popenMock.reset_mock()
         self.popenMock.return_value.stdout = self.invalidConnectResponse
@@ -66,8 +67,8 @@ class TestP3270Client(unittest.TestCase):
         # The following test fails on python 3.5 as in :
         #     https://github.com/rm-hull/luma.oled/issues/55
         # Anyway I am covering tests on writes on stdin in other cases
-        #self.popenMock.return_value.stdin.write.assert_called_once()
-       
+        # self.popenMock.return_value.stdin.write.assert_called_once()
+
     def test_disconnect(self):
         cmd = b'Disconnect\n'
         self.resetMock()
@@ -132,7 +133,7 @@ class TestP3270Client(unittest.TestCase):
         self.resetMock()
         assert self.client1.clearScreen()
         self.checkStdin(cmd)
-        
+
     def test_delChar(self):
         cmd = b'Delete\n'
         self.resetMock()
@@ -230,7 +231,7 @@ class TestP3270Client(unittest.TestCase):
         assert not self.client1.isConnected()
         self.checkStdin(cmd)
         assert self.client1.s3270.buffer == 'Unknown action: NoOpCommand'
-        
+
     def test_statusMessage(self):
         self.resetMock()
         self.client1.sendEnter()
@@ -239,11 +240,11 @@ class TestP3270Client(unittest.TestCase):
         assert statusMessage.keyboardState() == 'Unlocked'
         assert statusMessage.screenFormatting() == 'Formatted'
         assert statusMessage.fieldProtection() == 'Unprotected'
-        assert statusMessage.connectionState() 
+        assert statusMessage.connectionState()
         assert statusMessage.emulatorMode() == '3270'
         assert statusMessage.modelNumber() == '2'
         assert statusMessage.screenDefinition() == (24, 80)
-        assert statusMessage.cursorPosition() == (9, 3) 
+        assert statusMessage.cursorPosition() == (9, 3)
         assert statusMessage.windowId() == '0x0'
         assert statusMessage.execTime() == '0.000'
 
@@ -272,6 +273,7 @@ class TestP3270Client(unittest.TestCase):
         assert statusMessage.cursorPosition() == None
         assert statusMessage.windowId() == None
         assert statusMessage.execTime() == None
+
 
 if __name__ == '__main__':
     unittest.main()
