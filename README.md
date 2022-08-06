@@ -140,9 +140,16 @@ Once the client object (P3270Client class) is created, the following methods can
 * `sendBackTab()` 
     * __Description__: Send back Tab to the host  (go to start of previous input field) 
     * __Arguments__: none
+* `sendHome()` 
+    * __Description__: Send Home key to the host 
+    * __Arguments__: none
 * `sendTab()` 
     * __Description__: Send Tab key to the host 
     * __Arguments__: none
+* `sendKeys(keys)` 
+    * __Description__: Emulates pressing keys to the host 
+        * __Arguments__: <br>
+        __keys__ (_string_): The keys to emulate to the host
 * `clearScreen()` 
     * __Description__: Clear the screen 
     * __Arguments__: none
@@ -151,6 +158,9 @@ Once the client object (P3270Client class) is created, the following methods can
     * __Arguments__: none
 * `delField()`
     * __Description__: Delete the whole field
+    * __Arguments__: none
+* `delWord()`
+    * __Description__: Delete word under cursor
     * __Arguments__: none
 * `eraseChar()`
     * __Description__: Erase character previous character (ASCII BS)
