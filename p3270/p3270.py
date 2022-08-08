@@ -201,12 +201,35 @@ class P3270Client():
         logger.info("Sending back tab to remote host")
         return self.s3270.do('BackTab')
 
+    def sendHome(self):
+        """ Send Home key
+        """
+        logger.info("Sending Home key to remote host")
+        return self.s3270.do('Home')
+
     def sendTab(self):
         """ Send tab key (to go to the beginnig of the next field).
         """
         logger.info("Sending tab to remote host")
         return self.s3270.do('Tab')
 
+    def sendKeys(self, keys):
+        """ Send a string of keys to the remote host.
+            Emulates pressing a key on the 3270 keyboard.
+            May block waiting for a response
+            keys is a string of keys to send
+        """
+        logger.info("Sending keys [{}] to remote host".format(keys))
+        for key in keys:
+            if key == '\n':
+                return self.sendEnter()
+            if key == '\t':
+                return self.sendTab()
+            if key == '\b':
+                return self.sendBackSpace()
+            
+            return self.s3270.do("Key({})".format(key))
+        
     def clearScreen(self):
         """ Clear the screen.
             May block waiting for a response
@@ -225,6 +248,12 @@ class P3270Client():
         """
         logger.info("Deleting field")
         return self.s3270.do('DeleteField')
+
+    def delWord(self):
+        """ Delete word under cursor.
+        """
+        logger.info("Deleting word")
+        return self.s3270.do('DeleteWord')
 
     def eraseChar(self):
         """ Erase previous character (or send ASCII BS).
