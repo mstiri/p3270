@@ -227,9 +227,9 @@ class P3270Client():
                 return self.sendTab()
             if key == '\b':
                 return self.sendBackSpace()
-            
+
             return self.s3270.do("Key({})".format(key))
-        
+
     def clearScreen(self):
         """ Clear the screen.
             May block waiting for a response
