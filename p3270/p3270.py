@@ -308,12 +308,16 @@ class P3270Client():
 
     def saveScreen(self, fileName='screen', dataType='html'):
         """ Save the current screen in the form of an HTML file.
+            Other types supported: rtf,txt
         """
         if fileName and self.conf.screensDir:
             fileName = os.path.join(self.conf.screensDir, fileName)
         if dataType == 'html' or dataType == 'rtf':
             logger.info("Save an '{}' screen to file [{}]".format(dataType, fileName))
             return self.s3270.do('PrintText({}, {})'.format(dataType, fileName))
+        if dataType == 'txt':
+            logger.info("Save an '{}' screen to file [{}]".format(dataType, fileName))
+            return self.s3270.do('PrintText(file, {})'.format(fileName))
         else:
             logger.error("Specified data type '{}' is invalid".format(dataType))
             return False
