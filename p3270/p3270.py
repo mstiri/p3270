@@ -395,8 +395,83 @@ class P3270Client():
         result = self.readTextAtPosition(row,col,len(text))
         return text == result
 
+    def waitFor3270Mode(self):
+        """Wait until the emulator is in 3270 mode.
+        """
+        result = self.s3270.do("Wait({0}, 3270mode)".format(self.timeout))
+        return result
+
+    def waitForCursorAt(self, row, col):
+        """Wait until the host moves the cursor to the specified 1-origin row and column.
+        """
+        result = self.s3270.do("Wait({0}, cursorAt, {1}, {2})".format(self.timeout, row, col))
+        return result
+
+    def waitForCursorAtOffset(self, offset):
+        """Wait until the host moves the cursor to the specified offset.
+        """
+        result = self.s3270.do("Wait({0}, cursorAt, {1})".format(self.timeout, offset))
+        return result
+
+    def waitForDisconnect(self):
+        """Wait until the host session disconnects.
+        """
+        result = self.s3270.do("Wait({0}, disconnect)".format(self.timeout))
+        return result
+    
     def waitForField(self):
-        result = self.s3270.do("Wait({0}, InputField)".format(self.timeout))
+        """Wait until the host creates at least one modifiable field on the screen.
+        """
+        result = self.s3270.do("Wait({0}, inputField)".format(self.timeout))
+        return result
+
+    def waitForFieldAt(self, row, col):
+        """Wait until the host creates an input field at the specified `row` and `column`.
+        """
+        result = self.s3270.do("Wait({0}, inputFieldAt, {1}, {2})".format(self.timeout, row, col))
+        return result
+
+    def waitForFieldAtOffset(self, offset):
+        """Wait until the host creates an input field at the specified offset.
+        """
+        result = self.s3270.do("Wait({0}, inputFieldAt, {1})".format(self.timeout, offset))
+        return result
+
+    def waitForNVTMode(self):
+        """Wait until the emulator is in NVT mode.
+        """
+        result = self.s3270.do("Wait({0}, nvtmode)".format(self.timeout))
+        return result
+
+    def waitForOutput(self):
+        """Wait until the host modifies the screen.
+        """
+        result = self.s3270.do("Wait({0}, output)".format(self.timeout))
+        return result
+
+    def waitForTimeout(self):
+        """Wait for the specified timeout, set by `p3270.timeout`
+        """
+        result = self.s3270.do("Wait({0}, seconds)".format(self.timeout))
+        return result
+
+    def waitForStringAt(self, row, col, string):
+        """Wait until the host writes the specified string at `row` and `column`.
+        """
+        result = self.s3270.do("Wait({0}, stringAt, {1}, {2}, {3})".format(self.timeout, row, col, string))
+        return result
+
+    def waitForStringAtOffset(self, offset, string):
+        """Wait until the host writes the specified string `offset`.
+        """
+        result = self.s3270.do("Wait({0}, stringAt, {1}, {2})".format(self.timeout, offset, string))
+        return result
+
+    def waitForUnlock(self):
+        """Wait until the host unlocks the keyboard.
+        """
+        result = self.s3270.do("Wait({0}, unlock)".format(self.timeout))
+        return result
 
 class Config():
     """ Config represents a communication configuration.
