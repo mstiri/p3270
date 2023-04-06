@@ -1,3 +1,14 @@
+# v0.1.5
+## What's Changed
+* Add support for "text" format in saveScreen by @mike-pt in https://github.com/mstiri/p3270/pull/15
+* Feature wait functions by @bingo-bango in https://github.com/mstiri/p3270/pull/16
+
+## New Contributors
+* @mike-pt made their first contribution in https://github.com/mstiri/p3270/pull/15
+* @bingo-bango made their first contribution in https://github.com/mstiri/p3270/pull/16
+
+**Full Changelog**: https://github.com/mstiri/p3270/compare/v0.1.4...v0.1.5
+
 
 # v0.1.4
 - Add new methods: `sendHome()`, `sendKeys(keys)`  and `delWord()`
