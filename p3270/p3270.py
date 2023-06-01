@@ -90,7 +90,8 @@ class P3270Client():
     numOfInstances = 0
 
     def __init__(self, luName=None, hostName='localhost', hostPort='23', modelName='3279-2', configFile=None,
-                 verifyCert='yes', enableTLS='no', codePage='cp037', path=None, timeoutInSec=20):
+                 verifyCert='yes', enableTLS='no', codePage='cp037', path=None, timeoutInSec=20, 
+                 screensDir=None):
         self.luName = luName
         self.hostName = hostName
         self.hostPort = hostPort
@@ -100,8 +101,9 @@ class P3270Client():
         self.enableTLS = enableTLS
         self.timeout = timeoutInSec
         self.path = path
-        self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
-                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)
+        self.screensDir = screensDir
+        self.conf = Config(cfgFile=self.configFile, hostName=self.hostName, screensDir = self.screensDir,
+                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)        
         if self.conf.isValid():
             self.subpro = None
             self.makeArgs()
