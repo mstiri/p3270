@@ -101,7 +101,7 @@ class P3270Client():
         self.timeout = timeoutInSec
         self.path = path
         self.conf = Config(cfgFile=self.configFile, hostName=self.hostName,
-                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage)
+                           hostPort=self.hostPort, luName=self.luName, modelName=self.modelName, codePage=codePage, enableTLS = self.enableTLS)
         if self.conf.isValid():
             self.subpro = None
             self.makeArgs()
@@ -300,10 +300,10 @@ class P3270Client():
         logger.info("Move cursor to the first input field")
         return self.s3270.do('Home')
 
-    def sendText(self, text):
-        """ Send text to host.
+    def sendText(self, text, asterisks=False):
+        """ Send text to host. Possible to hide value (asterisk it) in log by set asterisks to True.
         """
-        logger.info("Send the following text: [{}]".format(text))
+        logger.info("Send the following text: [{}]".format('*' * len(text) if asterisks else text))
         return self.s3270.do('String("{}")'.format(text))
 
     def saveScreen(self, fileName='screen', dataType='html'):
