@@ -1,3 +1,12 @@
+# v0.1.6
+## What's Changed
+* One fix (missing enableTLS) and one feature (asterisks parameter in sendText) by @gemiusz in https://github.com/mstiri/p3270/pull/9
+
+## New Contributors
+* @gemiusz made their first contribution in https://github.com/mstiri/p3270/pull/9
+
+**Full Changelog**: https://github.com/mstiri/p3270/compare/v0.1.5...v0.1.6
+
 # v0.1.5
 ## What's Changed
 * Add support for "text" format in saveScreen by @mike-pt in https://github.com/mstiri/p3270/pull/15
